@@ -18,7 +18,7 @@ body{
   background: linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 100%);
   background-attachment: fixed; color:var(--text); min-height:100vh;
 }
-.container{width:100%;max-width:1300px;margin:auto;padding:0 16px}
+.container{width:100%;max-width:1400px;margin:auto;padding:0 16px} /* dilebarin dikit */
 h1,h2,h3{font-family:"Fraunces",serif}.hidden{display:none!important}
 .section-title{font-size:20px;margin:25px 0 12px 0; font-weight:700}
 
@@ -27,7 +27,6 @@ h1,h2,h3{font-family:"Fraunces",serif}.hidden{display:none!important}
 .login-box input{padding:14px;background:var(--dark);border:1px solid #334155;color:var(--text);border-radius:10px;width:100%;margin:10px 0; font-size:16px}
 .btn{padding:14px 20px;border-radius:10px;border:none;cursor:pointer;font-weight:600;width:100%;margin-top:10px; font-size:16px}
 .btn-primary{background:var(--accent);color:#000}
-.btn-primary:disabled{background:#444; cursor:not-allowed}
 .btn-ghost{background:#334155;color:#fff}
 .btn-back{background:var(--accent);color:#000; width:auto; padding:8px 16px; margin-right:10px}
 
@@ -41,23 +40,35 @@ h1,h2,h3{font-family:"Fraunces",serif}.hidden{display:none!important}
 .chip{padding:10px 18px;background:var(--card);border-radius:25px;cursor:pointer;white-space:nowrap;font-size:14px; font-weight:600; border:1px solid #334155}
 .chip.active{background:var(--accent);color:#000; border-color: var(--accent)}
 
-/* GRID LEBIH RAPAT */
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:30px}
-@media (min-width:600px){.grid{grid-template-columns:repeat(5,1fr)}}
-@media (min-width:1024px){.grid{grid-template-columns:repeat(8,1fr)}}
+/* ===== GRID OTOMATIS NGIKUTIN LAYAR ===== */
+.grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); /* HP: min 110px */
+  gap:12px;
+  margin-bottom:30px
+}
+@media (min-width:640px){ /* Tablet */
+ .grid{ grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:14px }
+}
+@media (min-width:1024px){ /* PC */
+ .grid{ grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:16px }
+}
 
-/* CARD PDF KECIL */
-.book-card{background:var(--glass); backdrop-filter: blur(10px); padding:8px;border-radius:12px;cursor:pointer; border:1px solid rgba(255,255,255,0.1); transition: all 0.3s}
+/* CARD PDF KECIL RESPONSIVE */
+.book-card{background:var(--glass); backdrop-filter: blur(10px); padding:8px;border-radius:12px;cursor:pointer; border:1px solid rgba(255,255,255,0.1); transition: all 0.3s; display:flex; flex-direction:column; height:100%}
 .book-card:hover{transform: translateY(-3px); background:#334155}
-.book-cover{width:100%;height:120px;border-radius:8px;object-fit:cover;margin-bottom:6px;background:#0b1224}
-.book-title{font-weight:600;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.book-stats{display:flex; justify-content:space-between; align-items:center; margin-top:5px; font-size:10px; color:var(--muted)}
+.book-cover{width:100%;aspect-ratio: 3/4; border-radius:8px;object-fit:cover;margin-bottom:6px;background:#0b1224} /* pakai aspect ratio biar pas */
+.book-title{font-weight:600;font-size:12px; overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; min-height:28px} /* judul 2 baris */
+.book-stats{display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding-top:5px; font-size:10px; color:var(--muted)}
 .stat-item{display:flex; align-items:center; gap:3px}
 .like-btn{background:none; border:none; color:var(--muted); cursor:pointer; padding:0; font-size:14px}
 .like-btn.liked{color:#ef4444}
 
 /* CARD FOLDER TETAP BESAR */
-.item-card{background:var(--glass); backdrop-filter: blur(10px); padding:15px;border-radius:15px;cursor:pointer; border:1px solid rgba(255,255,255,0.1); transition: all 0.3s; display:flex; align-items:center; gap:12px; grid-column: span 2}
+.item-card{background:var(--glass); backdrop-filter: blur(10px); padding:15px;border-radius:15px;cursor:pointer; border:1px solid rgba(255,255,255,0.1); transition: all 0.3s; display:flex; align-items:center; gap:12px; grid-column: span 2} /* folder 2 kolom */
+@media (max-width:639px){
+ .item-card{ grid-column: span 2 } /* di HP kecil ambil 2 kolom */
+}
 .item-card:hover{transform: translateY(-5px); background:#334155}
 .item-icon{font-size:32px; width:40px; text-align:center}
 
@@ -75,17 +86,15 @@ h1,h2,h3{font-family:"Fraunces",serif}.hidden{display:none!important}
 <div id="loginPage" class="login-page">
   <div class="login-box">
     <h1>📚 Pustaka WST DIGITAL</h1>
-    <p style="color:var(--muted); margin-bottom:10px">Login pakai Email OTP</p>
     <div id="step1">
       <input id="emailInput" type="email" placeholder="nama@gmail.com" required>
-      <button id="btnKirim" class="btn btn-primary" onclick="kirimOTP()">Kirim OTP</button>
+      <button class="btn btn-primary" onclick="kirimOTP()">Kirim OTP</button>
     </div>
     <div id="step2" class="hidden">
       <input id="otpInput" type="text" placeholder="Masukkan 6 digit kode" maxlength="6">
       <button class="btn btn-primary" onclick="verifikasiOTP()">Verifikasi & Masuk</button>
-      <button class="btn btn-ghost" onclick="backToEmail()">Ganti Email</button>
     </div>
-    <p id="loginError" style="color:#f87171; margin-top:10px"></p>
+    <p id="loginError" style="color:#f87171"></p>
   </div>
 </div>
 
@@ -142,12 +151,11 @@ let folderHistory = [];
 let currentFolderId = null;
 let currentFolderName = "Pilih Kategori";
 let bookStats = JSON.parse(localStorage.getItem('wstBookStats')) || {};
-let currentOTP = "";
-let currentEmail = "";
 
 window.onload = () => {
   const user = JSON.parse(localStorage.getItem('wstUserOTP'));
   if(user && user.login){ showApp(user.email); loadRootFolders(); }
+  searchInput.addEventListener('input', cariBuku); // tambahin search
 }
 
 function saveStats(){ localStorage.setItem('wstBookStats', JSON.stringify(bookStats)); }
@@ -165,17 +173,13 @@ async function openFolder(folderId, folderName){
   sectionTitle.innerText = `📁 ${folderName}`;
   loadingText.classList.remove('hidden'); grid.innerHTML = "";
 
-  try {
-    const [subfolders, books] = await Promise.all([getFolders(folderId), getBooks(folderId)]);
-    loadingText.classList.add('hidden');
-    if(subfolders.length === 0 && books.length > 0){
-      renderBooks(books);
-    } else {
-      renderItems([...subfolders,...books]);
-    }
-  } catch(e) {
-    loadingText.innerText = "Gagal memuat. Cek API Key Google Drive";
-    console.error(e)
+  const [subfolders, books] = await Promise.all([getFolders(folderId), getBooks(folderId)]);
+  loadingText.classList.add('hidden');
+
+  if(subfolders.length === 0 && books.length > 0){
+    renderBooks(books);
+  } else {
+    renderItems([...subfolders,...books]);
   }
 }
 
@@ -262,11 +266,6 @@ function closeReader(){
   openFolder(currentFolderId, currentFolderName);
 }
 
-// ===== FUNGSI LOGIN OTP LENGKAP =====
-function generateOTP(){
-  return Math.floor(100000 + Math.random() * 900000).toString();
-}
-
 function kirimOTP(){
   const email = emailInput.value.trim();
   loginError.innerText = "";
@@ -274,64 +273,29 @@ function kirimOTP(){
     loginError.innerText = "Masukkan email @gmail.com yang valid";
     return;
   }
-
-  btnKirim.disabled = true;
-  btnKirim.innerText = "Mengirim...";
+  currentOTP = Math.floor(100000 + Math.random() * 900000).toString();
   currentEmail = email;
-  currentOTP = generateOTP();
-
-  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-    to_email: email,
-    otp_code: currentOTP,
-    app_name: "Pustaka WST Digital"
-  }).then(function(response) {
-    step1.classList.add('hidden');
-    step2.classList.remove('hidden');
-    alert("Kode OTP sudah dikirim ke " + email);
-    btnKirim.disabled = false;
-    btnKirim.innerText = "Kirim OTP";
-  }, function(error) {
-    loginError.innerText = "Gagal kirim OTP. Cek Service ID & Template ID EmailJS";
-    console.log(error);
-    btnKirim.disabled = false;
-    btnKirim.innerText = "Kirim OTP";
-  });
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {to_email: email, otp_code: currentOTP, app_name: "Pustaka WST Digital"})
+ .then(() => {step1.classList.add('hidden'); step2.classList.remove('hidden'); alert("OTP dikirim ke " + email)})
+ .catch(() => {loginError.innerText = "Gagal kirim OTP"});
 }
-
 function verifikasiOTP(){
-  const otp = otpInput.value.trim();
-  if(otp === currentOTP){
+  if(otpInput.value.trim() === currentOTP){
     localStorage.setItem('wstUserOTP', JSON.stringify({email: currentEmail, login: true}));
-    showApp(currentEmail);
-    loadRootFolders();
-  } else {
-    loginError.innerText = "Kode OTP salah";
-  }
+    showApp(currentEmail); loadRootFolders();
+  } else {loginError.innerText = "Kode OTP salah";}
 }
+function logout(){ localStorage.removeItem('wstUserOTP'); location.reload(); }
+function showApp(email){ loginPage.classList.add('hidden'); mainApp.classList.remove('hidden'); }
+function loadRootFolders(){ renderCategories(); loadingText.classList.add('hidden'); }
 
-function backToEmail(){
-  step2.classList.add('hidden');
-  step1.classList.remove('hidden');
-  loginError.innerText = "";
+function cariBuku(){
+  const q = searchInput.value.toLowerCase();
+  document.querySelectorAll('.book-card').forEach(card=>{
+    const title = card.querySelector('.book-title').innerText.toLowerCase();
+    card.style.display = title.includes(q)? 'flex' : 'none';
+  })
 }
-
-function logout(){
-  localStorage.removeItem('wstUserOTP');
-  location.reload();
-}
-function showApp(email){
-  loginPage.classList.add('hidden');
-  mainApp.classList.remove('hidden');
-}
-function loadRootFolders(){
-  renderCategories();
-  loadingText.classList.add('hidden');
-}
-
-// Enter untuk submit
-emailInput.addEventListener("keypress", e => { if(e.key === "Enter") kirimOTP() });
-otpInput.addEventListener("keypress", e => { if(e.key === "Enter") verifikasiOTP() });
-
 </script>
 </body>
 </html>
