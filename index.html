@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pustaka WST DIGITAL</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700&family=Instrument+Sans:wght@400;600&display=swap" rel="stylesheet">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+:root{
+  --bg1:#0f172a; --bg2:#1e293b; --card:#1e293b;
+  --text:#f8fafc; --muted:#94a3b8; --accent:#f59e0b; --dark:#0b1224;
+  --glass: rgba(30, 41, 59, 0.6);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"Instrument Sans",sans-serif;
+  background: linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 100%);
+  background-attachment: fixed; color:var(--text); min-height:100vh;
+}
+.container{width:100%;max-width:1300px;margin:auto;padding:0 16px}
+h1,h2,h3{font-family:"Fraunces",serif}.hidden{display:none!important}
+.section-title{font-size:20px;margin:25px 0 12px 0; font-weight:700}
+
+.login-page{display:flex;align-items:center;justify-content:center;height:100vh;text-align:center;padding:20px; background: radial-gradient(circle at top, #1e3a8a 0%, #0f172a 70%)}
+.login-box{background:var(--glass); backdrop-filter: blur(20px); border:1px solid rgba(255,255,255,0.1); padding:40px;border-radius:20px;max-width:400px;width:100%}
+.login-box input{padding:14px;background:var(--dark);border:1px solid #334155;color:var(--text);border-radius:10px;width:100%;margin:10px 0; font-size:16px}
+.btn{padding:14px 20px;border-radius:10px;border:none;cursor:pointer;font-weight:600;width:100%;margin-top:10px; font-size:16px}
+.btn-primary{background:var(--accent);color:#000}
+.btn-ghost{background:#334155;color:#fff}
+.btn-back{background:var(--accent);color:#000; width:auto; padding:8px 16px; margin-right:10px}
+
+.header{background:var(--glass); backdrop-filter: blur(20px); border-bottom:1px solid rgba(255,255,255,0.1); padding:15px 0;position:sticky;top:0;z-index:50}
+.header-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.logo{font-size:20px; font-weight:700}
+.search-box{display:flex;align-items:center;background:var(--card);padding:10px 14px;border-radius:10px;flex:1;gap:8px;max-width:400px; border:1px solid #334155}
+.search-box input{background:transparent;border:none;outline:none;color:var(--text);width:100%; font-size:15px}
+
+.filter-row{display:flex;gap:10px;overflow-x:auto;padding:20px 0}
+.chip{padding:10px 18px;background:var(--card);border-radius:25px;cursor:pointer;white-space:nowrap;font-size:14px; font-weight:600; border:1px solid #334155}
+.chip.active{background:var(--accent);color:#000; border-color: var(--accent)}
+
+/* GRID LEBIH RAPAT */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:30px}
+@media (min-width:600px){.grid{grid-template-columns:repeat(5,1fr)}}
+@media (min-width:1024px){.grid{grid-template-columns:repeat(8,1fr)}} /* <-- LEBIH BANYAK PER BARIS */
+
+/* CARD PDF KECIL */
+.book-card{background:var(--glass); backdrop-filter: blur(10px); padding:8px;border-radius:12px;cursor:pointer; border:1px solid rgba(255,255,255,0.1); transition: all 0.3s}
+.book-card:hover{transform: translateY(-3px); background:#334155}
+.book-cover{width:100%;height:120px;border-radius:8px;object-fit:cover;margin-bottom:6px;background:#0b1224} /* <-- DIKECILIN */
+.book-title{font-weight:600;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.book-stats{display:flex; justify-content:space-between; align-items:center; margin-top:5px; font-size:10px; color:var(--muted)}
+.stat-item{display:flex; align-items:center; gap:3px}
+.like-btn{background:none; border:none; color:var(--muted); cursor:pointer; padding:0; font-size:14px}
+.like-btn.liked{color:#ef4444} /* merah kalau sudah like */
+
+/* CARD FOLDER TETAP BESAR */
+.item-card{background:var(--glass); backdrop-filter: blur(10px); padding:15px;border-radius:15px;cursor:pointer; border:1px solid rgba(255,255,255,0.1); transition: all 0.3s; display:flex; align-items:center; gap:12px; grid-column: span 2} /* folder 2 kolom */
+.item-card:hover{transform: translateY(-5px); background:#334155}
+.item-icon{font-size:32px; width:40px; text-align:center}
+
+.modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:100}
+.modal-card{background:var(--card); padding:0;border-radius:20px;width:95%;height:95%;display:flex;flex-direction:column; border:1px solid rgba(255,255,255,0.1)}
+.modal-header{padding:15px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #334155}
+.modal-header h3{font-size:18px}
+.modal-close{background:var(--accent); border:none;color:#000; width:35px; height:35px; border-radius:50%; font-size:20px; cursor:pointer; font-weight:700}
+.reader-frame{flex:1;width:100%;border:none;border-radius:0 0 20px 20px; background:#fff}
+</style>
+</head>
+<body>
+
+<div id="loginPage" class="login-page">
+  <div class="login-box">
+    <h1>📚 Pustaka WST DIGITAL</h1>
+    <div id="step1">
+      <input id="emailInput" type="email" placeholder="nama@gmail.com" required>
+      <button class="btn btn-primary" onclick="kirimOTP()">Kirim OTP</button>
+    </div>
+    <div id="step2" class="hidden">
+      <input id="otpInput" type="text" placeholder="Masukkan 6 digit kode" maxlength="6">
+      <button class="btn btn-primary" onclick="verifikasiOTP()">Verifikasi & Masuk</button>
+    </div>
+    <p id="loginError" style="color:#f87171"></p>
+  </div>
+</div>
+
+<div id="mainApp" class="hidden">
+<header class="header">
+  <div class="container">
+    <div class="header-top">
+      <div class="logo">📚 Pustaka WST</div>
+      <div class="search-box"><span>🔍</span><input id="searchInput" placeholder="Cari judul buku..."></div>
+      <button class="btn btn-ghost" style="width:auto;padding:10px 16px" onclick="logout()">Logout</button>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <h2 class="section-title">📂 Kategori</h2>
+  <div id="categoryFilters" class="filter-row"></div>
+  
+  <div style="display:flex; align-items:center; margin-bottom:10px">
+    <button id="backBtn" class="btn btn-back hidden" onclick="goBack()">⬅ Kembali</button>
+    <h2 id="sectionTitle" class="section-title" style="margin:0">📁 Pilih Kategori</h2>
+  </div>
+  
+  <section id="grid" class="grid"></section>
+  <p id="loadingText" style="text-align:center;color:var(--muted); padding:40px">Memuat...</p>
+</main>
+
+<div id="readerModal" class="modal hidden">
+  <div class="modal-bg" onclick="closeReader()"></div>
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 id="readerTitle"></h3>
+      <button class="modal-close" onclick="closeReader()">✕</button>
+    </div>
+    <iframe id="readerFrame" class="reader-frame"></iframe>
+  </div>
+</div>
+</div>
+
+<script>
+emailjs.init("SjwSmpXygmRzCE2zG") 
+const EMAILJS_SERVICE_ID = "service_8ilr9ds";
+const EMAILJS_TEMPLATE_ID = "template_eu4qb9e";
+const GOOGLE_API_KEY = "AIzaSyD2GhjR9BdPCdhhFCQopSv3vQYuWub_5Ww";
+
+const DAFTAR_FOLDER_UTAMA = [
+  { id: "1BL25ibdjCS5F6CQ0yeFFjPheiNaKwZgc", nama: "EDUCATION" },
+  { id: "1V5Drz-fxwUOGq_sTNS2el5HRyIJBiEHf", nama: "CERITA" },
+  { id: "1f5_QtqagTsVaT0A6qGIxC7VsTXmDtsmK", nama: "SAINS" },
+  { id: "1wukNWpJpTk9k-TnYoLeJHyYMCP_LRjqz", nama: "SEJARAH" }
+];
+
+let folderHistory = [];
+let currentFolderId = null;
+let currentFolderName = "Pilih Kategori";
+let bookStats = JSON.parse(localStorage.getItem('wstBookStats')) || {}; // {id: {views: 1, likes: 1}}
+
+window.onload = () => {
+  const user = JSON.parse(localStorage.getItem('wstUserOTP'));
+  if(user && user.login){ showApp(user.email); loadRootFolders(); }
+}
+
+function saveStats(){ localStorage.setItem('wstBookStats', JSON.stringify(bookStats)); }
+
+function renderCategories(){
+  categoryFilters.innerHTML = DAFTAR_FOLDER_UTAMA.map(cat=>
+    `<div class="chip" onclick="openFolder('${cat.id}', '${cat.nama}')">${cat.nama}</div>`
+  ).join('');
+}
+
+async function openFolder(folderId, folderName){
+  if(currentFolderId) folderHistory.push({id: currentFolderId, name: currentFolderName});
+  currentFolderId = folderId; currentFolderName = folderName;
+  backBtn.classList.remove('hidden');
+  sectionTitle.innerText = `📁 ${folderName}`;
+  loadingText.classList.remove('hidden'); grid.innerHTML = "";
+  
+  const [subfolders, books] = await Promise.all([getFolders(folderId), getBooks(folderId)]);
+  loadingText.classList.add('hidden');
+  
+  if(subfolders.length === 0 && books.length > 0){
+    renderBooks(books);
+  } else {
+    renderItems([...subfolders, ...books]);
+  }
+}
+
+async function getFolders(folderId){
+  const url = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+mimeType='application/vnd.google-apps.folder'&key=${GOOGLE_API_KEY}&fields=files(id,name)`;
+  const res = await fetch(url); const data = await res.json();
+  return (data.files || []).map(f => ({type: 'folder', id: f.id, name: f.name}));
+}
+async function getBooks(folderId){
+  const url = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+mimeType='application/pdf'&key=${GOOGLE_API_KEY}&fields=files(id,name,thumbnailLink)`;
+  const res = await fetch(url); const data = await res.json();
+  return (data.files || []).map(f => ({type: 'book', id: f.id, name: f.name.replace('.pdf',''), thumb: f.thumbnailLink}));
+}
+
+function renderItems(items){
+  if(items.length === 0) return grid.innerHTML = "<p style='color:var(--muted); grid-column:1/-1; text-align:center'>Folder ini kosong</p>";
+  grid.innerHTML = items.map(item=>{
+    if(item.type === 'folder'){
+      return `<div class="item-card" onclick="openFolder('${item.id}', '${item.name}')">
+        <div class="item-icon">📁</div><div><div class="book-title">${item.name}</div><div style="font-size:12px; color:var(--muted)">Folder</div></div>
+      </div>`;
+    } else {
+      return renderBookCard(item); // pakai fungsi card baru
+    }
+  }).join('');
+}
+
+// FUNGSI BARU: CARD KECIL + STATS + LIKE
+function renderBookCard(b){
+  const stats = bookStats[b.id] || {views: 0, likes: 0};
+  const isLiked = stats.likedByMe ? 'liked' : '';
+  return `
+    <div class="book-card" onclick="bukaReader('${b.id}', '${b.name}')">
+      <img class="book-cover" src="https://drive.google.com/thumbnail?id=${b.id}&sz=w200" onerror="this.src='https://placehold.co/120x160/1e293b/f59e0b?text=PDF'">
+      <div class="book-title">${b.name}</div>
+      <div class="book-stats">
+        <div class="stat-item">👁 ${stats.views}</div>
+        <button class="like-btn ${isLiked}" onclick="event.stopPropagation(); toggleLike('${b.id}')">❤️ ${stats.likes}</button>
+      </div>
+    </div>
+  `;
+}
+function renderBooks(books){
+  if(books.length === 0) return grid.innerHTML = "<p style='color:var(--muted); grid-column:1/-1; text-align:center'>Folder ini kosong</p>";
+  grid.innerHTML = books.map(b => renderBookCard(b)).join('');
+}
+
+// KLIK LIKE
+function toggleLike(id){
+  if(!bookStats[id]) bookStats[id] = {views: 0, likes: 0};
+  if(bookStats[id].likedByMe){
+    bookStats[id].likes--; bookStats[id].likedByMe = false;
+  } else {
+    bookStats[id].likes++; bookStats[id].likedByMe = true;
+  }
+  saveStats(); openFolder(currentFolderId, currentFolderName); // refresh tampilan
+}
+
+function goBack(){
+  if(folderHistory.length === 0){
+    currentFolderId = null; currentFolderName = "Pilih Kategori";
+    sectionTitle.innerText = "📁 Pilih Kategori"; backBtn.classList.add('hidden');
+    grid.innerHTML = ""; renderCategories();
+  } else {
+    const last = folderHistory.pop(); openFolder(last.id, last.name); folderHistory.pop();
+  }
+}
+
+// KETIKA BUKA PDF = TAMBAH VIEW
+function bukaReader(id, title){ 
+  if(!bookStats[id]) bookStats[id] = {views: 0, likes: 0};
+  bookStats[id].views++; saveStats();
+  
+  readerTitle.innerText = title; 
+  readerFrame.src = `https://drive.google.com/file/d/${id}/preview?rm=minimal`;
+  readerModal.classList.remove('hidden'); 
+  document.body.style.overflow = 'hidden';
+}
+function closeReader(){ 
+  readerModal.classList.add('hidden'); 
+  readerFrame.src = ""; 
+  document.body.style.overflow = 'auto';
+  openFolder(currentFolderId, currentFolderName); // refresh biar view nya keupdate
+}
+
+function kirimOTP(){ /* ... sama ... */ }
+function verifikasiOTP(){ /* ... sama ... */ }
+function logout(){ localStorage.removeItem('wstUserOTP'); location.reload(); }
+function showApp(email){ loginPage.classList.add('hidden'); mainApp.classList.remove('hidden'); }
+function loadRootFolders(){ renderCategories(); loadingText.classList.add('hidden'); }
+</script>
+</body>
+</html>
